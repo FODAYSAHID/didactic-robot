@@ -1,86 +1,93 @@
-import { Component } from "react";
+import { useState } from "react";
+import {ITodos} from "./Interfaces";
 
-export default class Todos extends Component {
-  state = {
-    newTodo: "",
-    todos: ["hello there", "general kenobi"],
-  };
+const Todos = () => {
 
-  onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [newTodo, setNewTodo] = useState<string>("")
+  const [deadline, setDeadline] = useState<string>("")
+  const [status, setStatus] = useState<string>("Todo");
+
+  const [todos, setTodos] = useState<ITodos[]>([])
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!this.state.newTodo) return;
+    if (!newTodo) return;
 
-    const todos = [this.state.newTodo, ...this.state.todos];
-    this.setState({ newTodo: "", todos });
+    const todo = {todoName: newTodo, deadline: deadline, status: status}
+
+    setTodos([todo, ...todos])
+
+    setNewTodo("");
+    
   };
 
-  removeTodo = (removeIndex: number) => {
-    const todos = this.state.todos.filter((_, index) => index !== removeIndex);
-    this.setState({ todos });
+  const removeTodo = (removeIndex: number) => {
+    //const todos = todos.filter((_, index) => index !== removeIndex);
+    setTodos(todos.filter((_:object, index: number) => index !== removeIndex));
   };
 
-  render() {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: 500,
-          margin: "0 auto",
-          padding: 8,
-        }}
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: 500,
+        margin: "0 auto",
+        padding: 8,
+      }}
+    >
+      <h2 style={{ textAlign: "center" }}>Todo</h2>
+      <form
+        onSubmit={onSubmit}
+        style={{ display: "flex", marginBottom: 8 }}
       >
-        <h2 style={{ textAlign: "center" }}>Todo</h2>
-        <form
-          onSubmit={this.onSubmit}
-          style={{ display: "flex", marginBottom: 8 }}
+        <input
+          type="text"
+          name="newTodo"
+          id="newTodo"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder="Fix the thing.."
+          style={{
+            display: "inline-flex",
+            flex: 1,
+            padding: 4,
+            border: "1px solid #eaeaea",
+            marginRight: 4,
+          }}
+        />
+        <button
+          type="submit"
+          style={{ borderColor: "#eaeaea", backgroundColor: "#fff" }}
         >
-          <input
-            type="text"
-            name="newTodo"
-            id="newTodo"
-            value={this.state.newTodo}
-            onChange={(e) => this.setState({ newTodo: e.target.value })}
-            placeholder="Fix the thing.."
+          Add
+        </button>
+      </form>
+      <div>
+        {todos.length === 0 && (
+          <div style={{ textAlign: "center" }}>Add some todos</div>
+        )}
+        {todos.map((todo, i) => (
+          <div
+            key={`${todo.todoName}-${i}`}
             style={{
-              display: "inline-flex",
-              flex: 1,
               padding: 4,
-              border: "1px solid #eaeaea",
-              marginRight: 4,
+              borderBottom: "1px solid #ccc",
+              display: "flex",
             }}
-          />
-          <button
-            type="submit"
-            style={{ borderColor: "#eaeaea", backgroundColor: "#fff" }}
           >
-            Add
-          </button>
-        </form>
-        <div>
-          {this.state.todos.length === 0 && (
-            <div style={{ textAlign: "center" }}>Add some todos</div>
-          )}
-          {this.state.todos.map((todo, i) => (
-            <div
-              key={`${todo}-${i}`}
-              style={{
-                padding: 4,
-                borderBottom: "1px solid #ccc",
-                display: "flex",
-              }}
+            <span style={{ flex: 1 }}>{todo.todoName}</span>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => removeTodo(i)}
             >
-              <span style={{ flex: 1 }}>{todo}</span>
-              <span
-                style={{ cursor: "pointer" }}
-                onClick={() => this.removeTodo(i)}
-              >
-                &times;
-              </span>
-            </div>
-          ))}
-        </div>
+              &times;
+            </span>
+          </div>
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default Todos;
