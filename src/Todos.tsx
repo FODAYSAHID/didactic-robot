@@ -3,9 +3,9 @@ import {ITodos} from "./Interfaces";
 
 const Todos = () => {
 
-  const [newTodo, setNewTodo] = useState<string>("")
-  const [deadline, setDeadline] = useState<string>("")
-  const [status, setStatus] = useState<string>("Todo");
+  const [newTodo, setNewTodo] = useState<string>("");
+  const [deadline, setDeadline] = useState<string>("");
+  const [status] = useState<string>("Todo");
 
   const [todos, setTodos] = useState<ITodos[]>([])
 
@@ -15,16 +15,21 @@ const Todos = () => {
 
     const todo = {todoName: newTodo, deadline: deadline, status: status}
 
-    setTodos([todo, ...todos])
+    setTodos([todo, ...todos]);
 
     setNewTodo("");
     
   };
 
   const removeTodo = (removeIndex: number) => {
-    //const todos = todos.filter((_, index) => index !== removeIndex);
     setTodos(todos.filter((_:object, index: number) => index !== removeIndex));
   };
+
+  const updateTodoStatus = (index:number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTodo = [...todos];
+    newTodo[index].status = e.target.value;
+    setTodos(newTodo);
+  }
 
   return (
     <div
@@ -77,6 +82,10 @@ const Todos = () => {
             }}
           >
             <span style={{ flex: 1 }}>{todo.todoName}</span>
+            <span><input type="radio" name={`${todo.todoName}-${i}`} value="Todo" checked={todo.status === "Todo"} onChange={updateTodoStatus(i)}/>Todo</span>
+            <span><input type="radio" name={`${todo.todoName}-${i}`} value="Doing" checked={todo.status === "Doing"} onChange={updateTodoStatus(i)}/>Doing</span>
+            <span><input type="radio" name={`${todo.todoName}-${i}`} value="Done" checked={todo.status === "Done"} onChange={updateTodoStatus(i)}/>Done</span>
+            &nbsp;
             <span
               style={{ cursor: "pointer" }}
               onClick={() => removeTodo(i)}
