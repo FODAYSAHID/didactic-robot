@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {ITodos} from "./Interfaces";
+import moment from "moment";
 
 const Todos = () => {
 
@@ -18,6 +19,7 @@ const Todos = () => {
     setTodos([todo, ...todos]);
 
     setNewTodo("");
+    setDeadline("");
     
   };
 
@@ -61,6 +63,7 @@ const Todos = () => {
             marginRight: 4,
           }}
         />
+        <input type="datetime-local" name="deadline" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
         <button
           type="submit"
           style={{ borderColor: "#eaeaea", backgroundColor: "#fff" }}
@@ -82,10 +85,12 @@ const Todos = () => {
             }}
           >
             <span style={{ flex: 1 }}>{todo.todoName}</span>
+            {todo.deadline !== "" && (<span>&nbsp;Deadline: {moment(todo.deadline).format("MMMM Do YYYY, h:mm:ss a")}</span>)}
+            Status:&nbsp;
             <span><input type="radio" name={`${todo.todoName}-${i}`} value="Todo" checked={todo.status === "Todo"} onChange={updateTodoStatus(i)}/>Todo</span>
             <span><input type="radio" name={`${todo.todoName}-${i}`} value="Doing" checked={todo.status === "Doing"} onChange={updateTodoStatus(i)}/>Doing</span>
             <span><input type="radio" name={`${todo.todoName}-${i}`} value="Done" checked={todo.status === "Done"} onChange={updateTodoStatus(i)}/>Done</span>
-            &nbsp;
+            &nbsp;&nbsp;
             <span
               style={{ cursor: "pointer" }}
               onClick={() => removeTodo(i)}
