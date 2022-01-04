@@ -38,7 +38,7 @@ const Todos = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: 500,
+        width: 800,
         margin: "0 auto",
         padding: 8,
       }}
@@ -85,7 +85,7 @@ const Todos = () => {
             }}
           >
             <span style={{ flex: 1 }}>{todo.todoName}</span>
-            {todo.deadline !== "" && (<span>&nbsp;Deadline: {moment(todo.deadline).format("MMMM Do YYYY, h:mm:ss a")}</span>)}
+            {todo.deadline !== "" && (<span>&nbsp;Deadline: {moment(todo.deadline).format("MMMM Do YYYY, h:mm:ss a")}&nbsp;</span>)}
             Status:&nbsp;
             <span><input type="radio" name={`${todo.todoName}-${i}`} value="Todo" checked={todo.status === "Todo"} onChange={updateTodoStatus(i)}/>Todo</span>
             <span><input type="radio" name={`${todo.todoName}-${i}`} value="Doing" checked={todo.status === "Doing"} onChange={updateTodoStatus(i)}/>Doing</span>
